@@ -25,5 +25,7 @@ var_dump($response->getBody());
 
 # Test
 
+```sh
 php composer.phar php-cs-fixer
 php composer.phar phpunit
+```
