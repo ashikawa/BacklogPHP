@@ -1,0 +1,32 @@
+{
+    "name": "backlog/client",
+    "description": "",
+    "version": "1.0.0-dev",
+    "type": "library",
+    "keywords": ["nulab", "Backlog", "api", "v2", "client"],
+    "homepage": "https://github.com/m-s-modified",
+    "license": "LGPL-3.0+",
+    "authors": [{
+        "name": "ashikawa",
+        "email": "a.shigeru@gmail.com",
+        "role": "Developer"
+    }],
+    "require": {
+        "php": ">=5.4",
+        "zendframework/zend-http": "2.3.*",
+        "zendframework/zend-json": "2.3.*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.2.*",
+        "fabpot/php-cs-fixer": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "Backlog\\": "library/"
+        }
+    },
+    "scripts": {
+        "phpunit": "phpunit -c tests/phpunit.xml",
+        "php-cs-fixer": "php-cs-fixer fix ."
+    }
+}
