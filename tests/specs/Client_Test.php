@@ -29,6 +29,14 @@ class Client_Test extends PHPUnit_Framework_TestCase
         $adapter->setResponse($response);
     }
 
+    public function testBasicFunctions()
+    {
+        $client = $this->client;
+        $httpClient = $client->getHttpClient();
+
+        $this->assertEquals('Zend\Http\Client', get_class($httpClient));
+    }
+
     public function testSpacesAndBaseUri()
     {
         $this->setMockResponse();

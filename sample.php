@@ -48,6 +48,13 @@ $response = $backlog->projects->get();
 //     'priorityId'  => 2,
 // ));
 
+// # Post File Attachment
+
+// $backlog->getHttpClient()
+//     ->setFileUpload('/tmp/dymmy.txt', 'file');
+
+// $response = $backlog->space->attachment->post();
+
 // # PUT
 
 // $response = $backlog->space->notification->put(array(

@@ -54,7 +54,9 @@ class Client
      */
     public function __construct($config = null)
     {
-        $this->config = $config;
+        if (!is_null($config)) {
+            $this->config = $config;
+        }
 
         $this->setupCallMethod();
     }
@@ -114,6 +116,10 @@ class Client
      */
     public function getHttpClient()
     {
+        if (!$this->HttpClient) {
+            $this->HttpClient = new HttpClient();
+        }
+
         return $this->HttpClient;
     }
 
@@ -157,13 +163,18 @@ class Client
      */
     public function request($method, $params = array())
     {
+        $httpClient = $this->getHttpClient();
+
         $endpoint = $this->buildEndPointUri();
-        $config   = $this->config;
 
-        $httpClient   = new HttpClient($endpoint, $config);
-        $httpClient->setMethod($method);
+        $httpClient->setUri($endpoint)
+            ->setMethod($method);
 
-        $this->HttpClient = $httpClient;
+        $config = $this->config;
+
+        if (!is_null($config)) {
+            $httpClient->setOptions($config);
+        }
 
         $this->setupParameters($httpClient, $params);
 
