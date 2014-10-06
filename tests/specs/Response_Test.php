@@ -25,7 +25,7 @@ class Response_Test extends PHPUnit_Framework_TestCase
         $this->assertEquals('dummy', $response->content);
 
         $this->assertEquals('dummy', $response->getBody()->content);
-        $this->assertInternalType('string', $response->getRawResponse());
+        $this->assertInternalType('string', $response->getRawBody());
     }
 
     /**

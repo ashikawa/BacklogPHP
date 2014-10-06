@@ -1,7 +1,6 @@
 <?php
 namespace Backlog;
 
-use DomainException;
 use ReflectionClass;
 use Zend\Http\Client as HttpClient;
 use Zend\Http\Request;
@@ -180,13 +179,22 @@ class Client
 
         $httpResponse = $httpClient->send();
 
-        $this->httpErrorCheck($httpResponse);
+        if ($httpResponse->isSuccess()) {
+            $response = new Response($httpResponse);
 
-        $jsonResponse = new Response($httpResponse);
+            return $response;
+        }
 
-        $this->apiErrorCheck($jsonResponse);
+        try {
+            $response = new Response($httpResponse);
+        } catch (\Exception $e) {
+            $message = $httpResponse->getReasonPhrase();
+            $code    = $httpResponse->getStatusCode();
 
-        return $jsonResponse;
+            throw new HttpErrorException($message, $code);
+        }
+
+        $this->throwApiException($response);
     }
 
     /**
@@ -238,42 +246,16 @@ class Client
     }
 
     /**
-     * @param  HttpResponse $response
-     * @return boolean
-     */
-    protected function httpErrorCheck(HttpResponse $response)
-    {
-        $contentType = $response->getHeaders()->get('Content-Type');
-
-        if (!($contentType instanceof \Zend\Http\Header\ContentType)) {
-            throw new DomainException('Not found response header `Content-Type`');
-        }
-
-        if (!$contentType->match('application/json')) {
-            if ($response->isSuccess()) {
-                throw new DomainException('Error Processing Request');
-            }
-
-            $message = $response->getReasonPhrase();
-            $code    = $response->getStatusCode();
-
-            throw new HttpErrorException($message, $code);
-        }
-
-        return true;
-    }
-
-    /**
      * @param  Response $response
      * @return boolean
      */
-    protected function apiErrorCheck(Response $response)
+    protected function throwApiException(Response $response)
     {
         if (!isset($response->errors)) {
-            return true;
+            throw new DomainException("Error Processing Request");
         }
 
-        $message = $response->getRawResponse();
+        $message = $response->getRawBody();
 
         $exception = new ApiErrorException('Backlog API Errors: more info `$e->getErrors()`');
         $exception->setErrors($response->errors);

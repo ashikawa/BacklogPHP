@@ -23,27 +23,41 @@ class Response
     protected $jsonBody;
 
     /**
-     * @var string
-     */
-    protected $rawBody;
-
-    /**
      * @var HttpResponse $httpResponse
      */
     public function __construct(HttpResponse $httpResponse)
     {
         $this->httpResponse = $httpResponse;
-        $this->rawBody      = $httpResponse->getBody();
 
-        try {
-            $jsonBody = Json::decode($this->rawBody, Json::TYPE_OBJECT);
-            $this->jsonBody = $jsonBody;
-        } catch (JsonException $e) {
-            throw new DomainException(sprintf(
-                'Unable to decode response : %s',
-                $e->getMessage()
-            ), 0, $e);
+        $headers   = $httpResponse->getHeaders();
+
+        $dispotion   = $headers->get('Content-Disposition');
+        $contentType = $headers->get('Content-Type');
+
+        if ($dispotion && strpos($dispotion->getFieldValue(), 'attachment') === 0) {
+            return;
         }
+
+        if ($contentType->match('application/json')) {
+            try {
+                $jsonBody = Json::decode($httpResponse->getBody(), Json::TYPE_OBJECT);
+                $this->jsonBody = $jsonBody;
+
+                return;
+            } catch (JsonException $e) {
+                throw new DomainException(sprintf(
+                    'Unable to decode response : %s',
+                    $e->getMessage()
+                ), 0, $e);
+            }
+        }
+
+        throw new DomainException('Unsupported Response');
+    }
+
+    public function getHttpResponse()
+    {
+        return $this->httpResponse;
     }
 
     /**
@@ -86,8 +100,16 @@ class Response
     /**
      * @return string
      */
-    public function getRawResponse()
+    public function getRawBody()
     {
-        return $this->rawBody;
+        return $this->httpResponse->getBody();
+    }
+
+    /**
+     * @return int
+     */
+    public function save($name)
+    {
+        return file_put_contents($name, $this->getRawBody());
     }
 }

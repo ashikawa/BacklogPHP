@@ -93,43 +93,44 @@ class Client_Test extends PHPUnit_Framework_TestCase
         $method = $client->getHttpClient()->getMethod();
         $this->assertEquals('GET', $method);
 
-        $client->projects->get(array('p1' => 'v1'));
+        $testCases = array(
+            'GET'    => array('p1' => 'v1'),
+            'POST'   => array('p2' => 'v2'),
+            'PUT'    => array('p3' => 'v3'),
+            'PATCH'  => array('p4' => 'v4'),
+            'DELETE' => array('p5' => 'v5'),
+        );
 
-        $method = $client->getHttpClient()->getMethod();
-        $this->assertEquals('GET', $method);
+        foreach ($testCases as $_method => $args) {
+            call_user_func_array(array($client->projects, strtolower($_method)), array($args));
 
-        $request = $client->getHttpClient()->getRequest();
-        $this->assertEquals('v1', $request->getQuery('p1'));
+            $method = $client->getHttpClient()->getMethod();
+            $this->assertEquals($_method, $method);
 
-        $client->projects->post(array('p2' => 'v2'));
+            $request = $client->getHttpClient()->getRequest();
 
-        $method = $client->getHttpClient()->getMethod();
-        $this->assertEquals('POST', $method);
+            if ($_method == 'GET' || $_method == 'DELETE' ) {
+                $this->assertEquals(current($args), $request->getQuery(key($args)));
+            } else {
+                $this->assertEquals(current($args), $request->getPost(key($args)));
+            }
+        }
+    }
 
-        $request = $client->getHttpClient()->getRequest();
-        $this->assertEquals('v2', $request->getPost('p2'));
+    public function testSaceAttachment()
+    {
+        $this->setMockResponse('200ok_attachment');
 
-        $request = $client->getHttpClient()->getRequest();
+        $response = $this->client->dummymethod()->get();
 
-        $client->projects->put(array('p3' => 'v3'));
+        $this->assertNull($response->getBody());
 
-        $method = $client->getHttpClient()->getMethod();
-        $this->assertEquals('PUT', $method);
+        $fileName = __DIR__.'/tmp/'.uniqid(__METHOD__);
+        $response->save($fileName);
 
-        $request = $client->getHttpClient()->getRequest();
-        $this->assertEquals('v3', $request->getPost('p3'));
+        $this->assertEquals('test http body', file_get_contents($fileName));
 
-        $client->projects->patch(array('p4' => 'v4'));
-
-        $method = $client->getHttpClient()->getMethod();
-        $this->assertEquals('PATCH', $method);
-
-        $request = $client->getHttpClient()->getRequest();
-        $this->assertEquals('v4', $request->getPost('p4'));
-
-        $client->projects->delete();
-        $method = $client->getHttpClient()->getMethod();
-        $this->assertEquals('DELETE', $method);
+        unlink($fileName);
     }
 
     /**
@@ -145,11 +146,16 @@ class Client_Test extends PHPUnit_Framework_TestCase
     public function testApiErrorDetails()
     {
         $this->setMockResponse('400badrequest');
+
+        $errors = null;
+
         try {
-            $this->client->dummymethod();
+            $this->client->dummymethod->get();
         } catch (\Backlog\Exception\ApiErrorException $e) {
-            $this->assertNotEmpty($e->getErrors());
+            $errors = $e->getErrors();
         }
+
+        $this->assertNotEmpty($errors);
     }
 
     /**
