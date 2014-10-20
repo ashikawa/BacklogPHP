@@ -5,6 +5,7 @@ before_install:
 before_script:
  - composer install
 script:
+ - composer php-cs-fixer-dr
  - composer phpunit
 notifications:
   emails:
