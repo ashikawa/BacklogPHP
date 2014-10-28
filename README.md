@@ -18,10 +18,13 @@ $backlog = new \Backlog\Client();
 $backlog->setSpace($space)
     ->setToken($token);
 
+// GET /api/v2/projects
 $response = $backlog->projects->get();
 
 var_dump($response->getBody());
 ```
+
+[more sample](https://github.com/m-s-modified/BacklogPHP/blob/master/sample.php)
 
 # Test
 
