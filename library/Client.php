@@ -225,8 +225,8 @@ class Client
            'apiKey'  => $this->token,
         );
 
-        if ($method === Request::METHOD_GET
-                || $method === Request::METHOD_DELETE) {
+        if (Request::METHOD_GET === $method
+                || Request::METHOD_DELETE === $method) {
             $params = array_merge($params, $authParameter);
             $client->setParameterGet($params);
         }
