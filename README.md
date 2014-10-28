@@ -32,3 +32,7 @@ var_dump($response->getBody());
 php composer.phar php-cs-fixer
 php composer.phar phpunit
 ```
+
+# CI
+
+[travis-ci repo](https://travis-ci.org/m-s-modified/BacklogPHP)
