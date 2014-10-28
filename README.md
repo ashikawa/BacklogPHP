@@ -33,6 +33,6 @@ php composer.phar php-cs-fixer
 php composer.phar phpunit
 ```
 
-# CI
+# CI Build Status
 
-[travis-ci repo](https://travis-ci.org/m-s-modified/BacklogPHP)
+[![Build Status](https://travis-ci.org/m-s-modified/BacklogPHP.svg?branch=master)](https://travis-ci.org/m-s-modified/BacklogPHP)
