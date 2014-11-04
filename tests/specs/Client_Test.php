@@ -109,7 +109,7 @@ class Client_Test extends PHPUnit_Framework_TestCase
 
             $request = $client->getHttpClient()->getRequest();
 
-            if ('GET' == $_method || 'DELETE' == $_method ) {
+            if ('GET' == $_method || 'DELETE' == $_method) {
                 $this->assertEquals(current($args), $request->getQuery(key($args)));
             } else {
                 $this->assertEquals(current($args), $request->getPost(key($args)));
