@@ -88,10 +88,10 @@ class Response
     public function __get($name)
     {
         if (null === $this->jsonBody) {
-            return null;
+            return;
         }
         if (!isset($this->jsonBody->{$name})) {
-            return null;
+            return;
         }
 
         return $this->jsonBody->{$name};
