@@ -7,8 +7,11 @@ before_script:
  - composer install
 script:
  - composer php-cs-fixer-dr
+ - composer phpmd
  - composer phpunit
 notifications:
+  webhooks:
+    - http://robo-pen.herokuapp.com/hubot/travis?room=8712
   emails:
     - a.shigeru@gmail.com
   on_success: always # default: change

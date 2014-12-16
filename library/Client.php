@@ -255,7 +255,7 @@ class Client
             throw new DomainException("Error Processing Request");
         }
 
-        $message = $response->getRawBody();
+        // $message = $response->getRawBody();
 
         $exception = new ApiErrorException('Backlog API Errors: more info `$e->getErrors()`');
         $exception->setErrors($response->errors);
