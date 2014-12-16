@@ -1,5 +1,5 @@
 <?php
-class Client_Test extends PHPUnit_Framework_TestCase
+class ClientTest extends PHPUnit_Framework_TestCase
 {
     protected $adapter = null;
 
@@ -101,15 +101,15 @@ class Client_Test extends PHPUnit_Framework_TestCase
             'DELETE' => array('p5' => 'v5'),
         );
 
-        foreach ($testCases as $_method => $args) {
-            call_user_func_array(array($client->projects, strtolower($_method)), array($args));
+        foreach ($testCases as $case => $args) {
+            call_user_func_array(array($client->projects, strtolower($case)), array($args));
 
             $method = $client->getHttpClient()->getMethod();
-            $this->assertEquals($_method, $method);
+            $this->assertEquals($case, $method);
 
             $request = $client->getHttpClient()->getRequest();
 
-            if ('GET' == $_method || 'DELETE' == $_method) {
+            if ('GET' == $case || 'DELETE' == $case) {
                 $this->assertEquals(current($args), $request->getQuery(key($args)));
             } else {
                 $this->assertEquals(current($args), $request->getPost(key($args)));

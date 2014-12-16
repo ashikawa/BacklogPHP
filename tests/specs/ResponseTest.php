@@ -1,5 +1,5 @@
 <?php
-class Response_Test extends PHPUnit_Framework_TestCase
+class ResponseTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
@@ -35,6 +35,6 @@ class Response_Test extends PHPUnit_Framework_TestCase
     {
         $httpresponse = $this->buildHttpResponse('200ok_wrongformat');
 
-        $response = new Backlog\Response($httpresponse);
+        new Backlog\Response($httpresponse);
     }
 }

@@ -30,6 +30,7 @@ var_dump($response->getBody());
 
 ```sh
 php composer.phar php-cs-fixer
+php composer.phar phpmd
 php composer.phar phpunit
 ```
 
