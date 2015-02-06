@@ -51,9 +51,9 @@ class ClientTest extends PHPUnit_Framework_TestCase
 
         $uri = $client->getHttpClient()->getUri();
 
-        $this->assertEquals('http',                   $uri->getScheme());
+        $this->assertEquals('http', $uri->getScheme());
         $this->assertEquals('dummyspace.example.com', $uri->getHost());
-        $this->assertEquals('/projects',              $uri->getPath());
+        $this->assertEquals('/projects', $uri->getPath());
 
         $request = $client->getHttpClient()->getRequest();
 
