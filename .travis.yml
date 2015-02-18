@@ -1,18 +1,16 @@
 language: php
 php:
-  - "5.4"
+    - "5.4"
 before_install:
- - composer self-update
+    - composer self-update
 before_script:
- - composer install
+    - composer install
 script:
- - composer php-cs-fixer-dr
- - composer phpmd
- - composer phpunit
+    - composer test
 notifications:
-  webhooks:
-    - http://robo-pen.herokuapp.com/hubot/travis?room=8712
-  emails:
-    - a.shigeru@gmail.com
-  on_success: always # default: change
-  on_failure: always
+    webhooks:
+        - http://robo-pen.herokuapp.com/hubot/travis?room=8712
+    emails:
+        - a.shigeru@gmail.com
+    on_success: always # default: change
+    on_failure: always
