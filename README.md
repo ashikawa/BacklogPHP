@@ -16,7 +16,7 @@ php composer.phar install
 <?php
 $backlog = new \Backlog\Client();
 $backlog->setSpace($space)
-    ->setToken($token);
+    ->setApiKey($token);
 
 // GET /api/v2/projects
 $response = $backlog->projects->get();
@@ -29,9 +29,7 @@ var_dump($response->getBody());
 # Test
 
 ```sh
-php composer.phar php-cs-fixer
-php composer.phar phpmd
-php composer.phar phpunit
+php composer.phar test
 ```
 
 # CI Build Status

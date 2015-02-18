@@ -1,4 +1,7 @@
 <?php
+/**
+ * @SuppressWarnings("TooManyMethods")
+ */
 class ClientTest extends PHPUnit_Framework_TestCase
 {
     protected $adapter = null;
@@ -37,6 +40,18 @@ class ClientTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('Zend\Http\Client', get_class($httpClient));
     }
 
+    public function testBaseUri()
+    {
+        $client = $this->client;
+
+        $client->setBaseUri('http://%s.example.com/')
+            ->setSpace('dummyspace');
+
+        $this->assertEquals(
+            'http://dummyspace.example.com/',
+            $client->getBaseUrl());
+    }
+
     public function testSpacesAndBaseUri()
     {
         $this->setMockResponse();
@@ -44,8 +59,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
         $client = $this->client;
 
         $client->setBaseUri('http://%s.example.com/')
-            ->setSpace('dummyspace')
-            ->setToken('dummytoken');
+            ->setSpace('dummyspace');
 
         $client->projects()->get();
 
@@ -54,10 +68,42 @@ class ClientTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('http', $uri->getScheme());
         $this->assertEquals('dummyspace.example.com', $uri->getHost());
         $this->assertEquals('/projects', $uri->getPath());
+    }
+
+    public function testApiKey()
+    {
+        $this->setMockResponse();
+
+        $client = $this->client;
+
+        $client->setBaseUri('http://%s.example.com/')
+            ->setSpace('dummyspace')
+            ->setApiKey('dummytoken');
+
+        $client->projects()->get();
 
         $request = $client->getHttpClient()->getRequest();
 
         $this->assertEquals('dummytoken', $request->getQuery('apiKey'));
+    }
+
+    public function testAccessToken()
+    {
+        $this->setMockResponse();
+
+        $client = $this->client;
+
+        $client->setBaseUri('http://%s.example.com/')
+            ->setSpace('dummyspace')
+            ->setAccessToken('dummytoken');
+
+        $client->projects()->get();
+
+        $request = $client->getHttpClient()->getRequest();
+
+        $this->assertEquals(
+            'Authorization: Bearer dummytoken',
+            $request->getHeader('Authorization')->toString());
     }
 
     public function testBuildQuery()

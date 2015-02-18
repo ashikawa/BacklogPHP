@@ -31,6 +31,11 @@
         "php-cs-fixer": "php-cs-fixer fix .",
         "php-cs-fixer-dr": "php-cs-fixer fix . --dry-run",
         "phpmd": "phpmd library,tests text codesize,controversial,design,naming,unusedcode",
+        "test": [
+            "composer php-cs-fixer-dr",
+            "composer phpmd",
+            "composer phpunit"
+        ],
         "clean": "rm -rf vendor composer.lock .php_cs.cache"
     }
 }

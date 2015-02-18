@@ -31,7 +31,12 @@ class Client
     /**
      * @var string
      */
-    protected $token = null;
+    protected $apiKey = null;
+
+    /**
+     * @var string
+     */
+    protected $accessToken = null;
 
     /**
      * @var array
@@ -46,7 +51,7 @@ class Client
     /**
      * @var HttpClient
      */
-    protected $HttpClient  = null;
+    protected $httpClient  = null;
 
     /**
      * @param array $config
@@ -89,6 +94,14 @@ class Client
     }
 
     /**
+     * @return string
+     */
+    public function getBaseUrl()
+    {
+        return sprintf($this->baseUri, $this->space);
+    }
+
+    /**
      * @param  string $space
      * @return Client
      */
@@ -100,12 +113,23 @@ class Client
     }
 
     /**
-     * @param  string $token
+     * @param  string $apiKey
      * @return Client
      */
-    public function setToken($token)
+    public function setApiKey($apiKey)
     {
-        $this->token = $token;
+        $this->apiKey = $apiKey;
+
+        return $this;
+    }
+
+    /**
+     * @param  string $apiKey
+     * @return Client
+     */
+    public function setAccessToken($accessToken)
+    {
+        $this->accessToken = $accessToken;
 
         return $this;
     }
@@ -115,11 +139,11 @@ class Client
      */
     public function getHttpClient()
     {
-        if (!$this->HttpClient) {
-            $this->HttpClient = new HttpClient();
+        if (!$this->httpClient) {
+            $this->httpClient = new HttpClient();
         }
 
-        return $this->HttpClient;
+        return $this->httpClient;
     }
 
     /**
@@ -205,7 +229,7 @@ class Client
         $methodStack = $this->methodStack;
         $path        = implode('/', $methodStack);
 
-        $endpoint = sprintf($this->baseUri, $this->space).$path;
+        $endpoint = $this->getBaseUrl().$path;
 
         $this->methodStack = array();
 
@@ -213,22 +237,19 @@ class Client
     }
 
     /**
-     * @param  Client $client
-     * @param  array  $params
-     * @return Client
+     * @param  HttpClient $client
+     * @param  array      $params
+     * @return HttpClient
      */
     protected function setupParameters($client, $params)
     {
         $method = $client->getMethod();
 
-        $authParameter = array(
-           'apiKey'  => $this->token,
-        );
-
-        if (Request::METHOD_GET === $method
-                || Request::METHOD_DELETE === $method) {
-            $params = array_merge($params, $authParameter);
-            $client->setParameterGet($params);
+        $apiKey = array();
+        if ($this->apiKey) {
+            $apiKey = array(
+                'apiKey' => $this->apiKey,
+            );
         }
 
         $hasBody = array(
@@ -238,8 +259,17 @@ class Client
         );
 
         if (in_array($method, $hasBody)) {
-            $client->setParameterGet($authParameter)
-                ->setParameterPost($params);
+            $client->setParameterPost($params);
+            $client->setParameterGet($apiKey);
+        } else {
+            $params = array_merge($params, $apiKey);
+            $client->setParameterGet($params);
+        }
+
+        if ($this->accessToken) {
+            $client->setHeaders(array(
+                'Authorization' => 'Bearer '.$this->accessToken,
+            ));
         }
 
         return $client;
@@ -252,10 +282,8 @@ class Client
     protected function throwApiException(Response $response)
     {
         if (!isset($response->errors)) {
-            throw new DomainException("Error Processing Request");
+            throw new \DomainException("Error Processing Request");
         }
-
-        // $message = $response->getRawBody();
 
         $exception = new ApiErrorException('Backlog API Errors: more info `$e->getErrors()`');
         $exception->setErrors($response->errors);
