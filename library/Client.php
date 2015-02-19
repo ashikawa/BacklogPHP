@@ -21,12 +21,7 @@ class Client
     /**
      * @var string
      */
-    protected $baseUri = "https://%s.backlog.jp/api/v2/";
-
-    /**
-     * @var string
-     */
-    protected $space = null;
+    protected $baseUri = null;
 
     /**
      * @var string
@@ -34,7 +29,7 @@ class Client
     protected $apiKey = null;
 
     /**
-     * @var string
+     * @var OAuth2\AccessToken
      */
     protected $accessToken = null;
 
@@ -98,18 +93,7 @@ class Client
      */
     public function getBaseUrl()
     {
-        return sprintf($this->baseUri, $this->space);
-    }
-
-    /**
-     * @param  string $space
-     * @return Client
-     */
-    public function setSpace($space)
-    {
-        $this->space = $space;
-
-        return $this;
+        return $this->baseUri;
     }
 
     /**
@@ -229,7 +213,7 @@ class Client
         $methodStack = $this->methodStack;
         $path        = implode('/', $methodStack);
 
-        $endpoint = $this->getBaseUrl().$path;
+        $endpoint = trim($this->getBaseUrl(), '/').'/api/v2/'.$path;
 
         $this->methodStack = array();
 

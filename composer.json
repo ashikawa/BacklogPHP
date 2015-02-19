@@ -3,7 +3,7 @@
     "description": "",
     "version": "1.0.0-dev",
     "type": "library",
-    "keywords": ["nulab", "Backlog", "api", "v2", "client"],
+    "keywords": ["nulab", "Backlog", "api", "v2", "client", "oauth"],
     "homepage": "https://github.com/m-s-modified",
     "license": "LGPL-3.0+",
     "authors": [{
@@ -18,8 +18,8 @@
     },
     "require-dev": {
         "phpunit/phpunit": "4.2.*",
-        "fabpot/php-cs-fixer": "dev-master",
-        "phpmd/phpmd": "*" 
+        "fabpot/php-cs-fixer": "*",
+        "phpmd/phpmd": "*"
     },
     "autoload": {
         "psr-4": {
@@ -30,7 +30,7 @@
         "phpunit": "phpunit -c tests/phpunit.xml",
         "php-cs-fixer": "php-cs-fixer fix .",
         "php-cs-fixer-dr": "php-cs-fixer fix . --dry-run",
-        "phpmd": "phpmd library,tests text codesize,controversial,design,naming,unusedcode",
+        "phpmd": "phpmd library,tests,public text codesize,controversial,design,naming,unusedcode",
         "test": [
             "composer php-cs-fixer-dr",
             "composer phpmd",

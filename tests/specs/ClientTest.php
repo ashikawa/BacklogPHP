@@ -40,26 +40,13 @@ class ClientTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('Zend\Http\Client', get_class($httpClient));
     }
 
-    public function testBaseUri()
-    {
-        $client = $this->client;
-
-        $client->setBaseUri('http://%s.example.com/')
-            ->setSpace('dummyspace');
-
-        $this->assertEquals(
-            'http://dummyspace.example.com/',
-            $client->getBaseUrl());
-    }
-
     public function testSpacesAndBaseUri()
     {
         $this->setMockResponse();
 
         $client = $this->client;
 
-        $client->setBaseUri('http://%s.example.com/')
-            ->setSpace('dummyspace');
+        $client->setBaseUri('http://dummyspace.example.com/');
 
         $client->projects()->get();
 
@@ -67,7 +54,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals('http', $uri->getScheme());
         $this->assertEquals('dummyspace.example.com', $uri->getHost());
-        $this->assertEquals('/projects', $uri->getPath());
+        $this->assertEquals('/api/v2/projects', $uri->getPath());
     }
 
     public function testApiKey()
@@ -76,8 +63,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
 
         $client = $this->client;
 
-        $client->setBaseUri('http://%s.example.com/')
-            ->setSpace('dummyspace')
+        $client->setBaseUri('http://dummyspace.example.com/')
             ->setApiKey('dummytoken');
 
         $client->projects()->get();
@@ -93,8 +79,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
 
         $client = $this->client;
 
-        $client->setBaseUri('http://%s.example.com/')
-            ->setSpace('dummyspace')
+        $client->setBaseUri('http://dummyspace.example.com/')
             ->setAccessToken('dummytoken');
 
         $client->projects()->get();
@@ -134,6 +119,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
         $this->setMockResponse();
 
         $client = $this->client;
+        $client->setBaseUri('http://www.example.com/');
 
         $client->projects->request('GET');
         $method = $client->getHttpClient()->getMethod();

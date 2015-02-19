@@ -12,6 +12,8 @@ php composer.phar install
 
 # How to use
 
+## API Client
+
 ```php
 <?php
 $backlog = new \Backlog\Client();
@@ -25,6 +27,21 @@ var_dump($response->getBody());
 ```
 
 [more sample](https://github.com/m-s-modified/BacklogPHP/blob/master/sample.php)
+
+## OAuth2
+
+1. Create new application in [Backlog Developper](https://www.backlog.jp/developer/applications/).
+2. set ENVs and run server.
+
+for example
+
+```sh
+env BACKLOG_BASE_URI=https://exmple.backlog.jp/ \
+    BACKLOG_CLIENT_ID=XXXXXXXXXXX \
+    BACKLOG_CLIENT_SECRET=XXXXXXXXXXX \
+    php -S 0.0.0.0:8000 -t public/
+```
+
 
 # Test
 
