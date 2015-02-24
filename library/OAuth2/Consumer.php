@@ -2,7 +2,7 @@
 namespace Backlog\OAuth2;
 
 /**
- * Class Consumer
+ * Consumer
  * @SuppressWarnings("Superglobals")
  */
 class Consumer
@@ -70,7 +70,7 @@ class Consumer
         $this->checkState();
 
         $params = array(
-            'grant_type'    => 'authorization_code', // 'refresh_token'
+            'grant_type'    => 'authorization_code',
             'code'          => $_REQUEST['code'],
             'client_id'     => $this->clientId,
             'client_secret' => $this->clientSecret,
@@ -80,12 +80,7 @@ class Consumer
             $params['redirect_uri'] = $this->redirectUri;
         }
 
-        $response = $this->client
-            ->oauth2->token
-            ->post($params)
-            ->getBody();
-
-        $_SESSION['ACCESS_TOKEN'] = serialize(new AccessToken($response));
+        $this->tokenRequest($params);
     }
 
     private function checkState()
@@ -98,6 +93,59 @@ class Consumer
         if ($stateSaved !== $state) {
             throw new \Exception('state error!');
         }
+    }
+
+    public function requestRefreshToken()
+    {
+        $accessToken = $this->getAccessToken();
+
+        if (is_null($accessToken)) {
+            throw new \Exception('access token not found');
+        }
+
+        $params = array(
+            'grant_type'    => 'refresh_token',
+            'client_id'     => $this->clientId,
+            'client_secret' => $this->clientSecret,
+            'refresh_token' => $accessToken->refresh_token,
+        );
+
+        $this->client->setAccessToken(null);
+
+        $this->tokenRequest($params);
+    }
+
+    /**
+     * @return stdClass jsonResponse
+     */
+    private function tokenRequest($params)
+    {
+        $response = $this->client
+            ->oauth2->token
+            ->post($params)
+            ->getBody();
+
+        $this->setAccessToken($response);
+
+        return $response;
+    }
+
+    /**
+     * @param  AccessToken|Object $accessToken
+     * @return Consumer
+     */
+    public function setAccessToken($accessToken)
+    {
+        if (! $accessToken instanceof AccessToken) {
+            $accessToken = new AccessToken($accessToken);
+        }
+
+        $_SESSION['ACCESS_TOKEN'] = serialize($accessToken);
+
+        $this->getClient()
+            ->setAccessToken($accessToken);
+
+        return $this;
     }
 
     /**

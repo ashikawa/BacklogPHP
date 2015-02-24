@@ -20,6 +20,7 @@ if (getenv('BACKLOG_CLIENT_ID')) {
 
     if (isset($_GET['callback'])) {
         $oauth->requestAccessToken();
+        $oauth->requestRefreshToken();
 
         header("Location: /");
         exit(0);
@@ -98,8 +99,25 @@ BACKLOG_CLIENT_SECRET=xxxxx</pre>
 <?php else: ?>
         <div class="starter-template">
 <?php   if (!$accessToken) : ?>
+            <div>
+                <table class="table">
+                    <tr><th>CLIENT ID</th><td><?php echo escape($config['clientId']); ?></td></tr>
+                    <tr><th>CLIENT SECRET</th><td><?php echo escape($config['clientSecret']); ?></td></tr>
+                    <tr><th>BASE_URI</th><td><?php echo escape($config['baseUri']); ?></td></tr>
+                </table>
+            </div>
             <p><a href="<?php echo escape($authorizeUrl); ?>" class="btn btn-primary">Login</a></p>
 <?php   else: ?>
+            <h2>Your Access Token.</h1>
+            <div>
+                <table class="table">
+                    <tr><th>access_token</th><td><?php echo escape($accessToken->access_token); ?></td></tr>
+                    <tr><th>token_type</th><td><?php echo escape($accessToken->token_type); ?></td></tr>
+                    <tr><th>expires_in</th><td><?php echo escape($accessToken->expires_in); ?></td></tr>
+                    <tr><th>refresh_token</th><td><?php echo escape($accessToken->refresh_token); ?></td></tr>
+                </table>
+            </div>
+
             <h2>Your Space Info.</h1>
             <div>
                 <table class="table">
