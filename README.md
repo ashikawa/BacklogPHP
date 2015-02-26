@@ -17,7 +17,7 @@ php composer.phar install
 ```php
 <?php
 $backlog = new \Backlog\Client();
-$backlog->setSpace($space)
+$backlog->setBaseUri($baseUri)
     ->setApiKey($token);
 
 // GET /api/v2/projects

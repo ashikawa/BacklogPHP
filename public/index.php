@@ -91,7 +91,7 @@ if (getenv('BACKLOG_CLIENT_ID')) {
             <h2>Second.</h2>
             <p>
                 Set ENV.
-                <pre>BACKLOG_SPACE=xxxxx
+                <pre>BACKLOG_BASE_URI=xxxxx
 BACKLOG_CLIENT_ID=xxxxx
 BACKLOG_CLIENT_SECRET=xxxxx</pre>
             </p>
