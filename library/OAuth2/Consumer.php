@@ -2,7 +2,8 @@
 namespace Backlog\OAuth2;
 
 /**
- * Consumer
+ * Consumer.
+ *
  * @SuppressWarnings("Superglobals")
  */
 class Consumer
@@ -28,7 +29,7 @@ class Consumer
     protected $client  = null;
 
     /**
-     * @var array $config
+     * @var array
      */
     public function __construct($config = array())
     {
@@ -131,7 +132,8 @@ class Consumer
     }
 
     /**
-     * @param  AccessToken|Object $accessToken
+     * @param AccessToken|Object $accessToken
+     *
      * @return Consumer
      */
     public function setAccessToken($accessToken)

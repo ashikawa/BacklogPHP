@@ -11,7 +11,8 @@ class ApiErrorException extends RuntimeException
     protected $errors = null;
 
     /**
-     * @param  array             $errors
+     * @param array $errors
+     *
      * @return ApiErrorException
      */
     public function setErrors($errors)

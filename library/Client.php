@@ -9,7 +9,7 @@ use Backlog\Exception\ApiErrorException;
 use Backlog\Exception\HttpErrorException;
 
 /**
- * Backlog Api V2 REST Client
+ * Backlog Api V2 REST Client.
  */
 class Client
 {
@@ -61,7 +61,7 @@ class Client
     }
 
     /**
-     * Set up HTTP Methods to use in __call()
+     * Set up HTTP Methods to use in __call().
      */
     protected function setupCallMethod()
     {
@@ -78,7 +78,8 @@ class Client
     }
 
     /**
-     * @param  string $url
+     * @param string $url
+     *
      * @return Client
      */
     public function setBaseUri($uri)
@@ -97,7 +98,8 @@ class Client
     }
 
     /**
-     * @param  string $apiKey
+     * @param string $apiKey
+     *
      * @return Client
      */
     public function setApiKey($apiKey)
@@ -108,7 +110,8 @@ class Client
     }
 
     /**
-     * @param  string $apiKey
+     * @param string $apiKey
+     *
      * @return Client
      */
     public function setAccessToken($accessToken)
@@ -131,7 +134,8 @@ class Client
     }
 
     /**
-     * @param  string $name
+     * @param string $name
+     *
      * @return Client
      */
     public function __get($name)
@@ -142,8 +146,9 @@ class Client
     }
 
     /**
-     * @param  string            $name
-     * @param  array             $arguments
+     * @param string $name
+     * @param array  $arguments
+     *
      * @return HttpClient|Client
      */
     public function __call($name, $arguments)
@@ -164,8 +169,9 @@ class Client
     }
 
     /**
-     * @param  string   $method
-     * @param  array    $params
+     * @param string $method
+     * @param array  $params
+     *
      * @return Response
      */
     public function request($method, $params = array())
@@ -221,8 +227,9 @@ class Client
     }
 
     /**
-     * @param  HttpClient $client
-     * @param  array      $params
+     * @param HttpClient $client
+     * @param array      $params
+     *
      * @return HttpClient
      */
     protected function setupParameters($client, $params)
@@ -260,7 +267,8 @@ class Client
     }
 
     /**
-     * @param  Response $response
+     * @param Response $response
+     *
      * @return boolean
      */
     protected function throwApiException(Response $response)

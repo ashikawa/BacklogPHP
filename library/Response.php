@@ -8,7 +8,7 @@ use Zend\Json\Json;
 
 /**
  * Wrapper of Zend\Http\Response
- * comvert json to Object
+ * comvert json to Object.
  */
 class Response
 {
@@ -23,7 +23,7 @@ class Response
     protected $jsonBody;
 
     /**
-     * @var HttpResponse $httpResponse
+     * @var HttpResponse
      */
     public function __construct(HttpResponse $httpResponse)
     {
@@ -70,6 +70,7 @@ class Response
 
     /**
      * @param string @name
+     *
      * @return boolean
      */
     public function __isset($name)
@@ -83,6 +84,7 @@ class Response
 
     /**
      * @param string @name
+     *
      * @return mixied
      */
     public function __get($name)
