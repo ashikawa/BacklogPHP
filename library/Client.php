@@ -127,7 +127,10 @@ class Client
     public function getHttpClient()
     {
         if (!$this->httpClient) {
-            $this->httpClient = new HttpClient();
+            $this->httpClient = new HttpClient(null, array(
+                'adapter'      => 'Zend\Http\Client\Adapter\Socket',
+                'ssltransport' => 'tls',
+            ));
         }
 
         return $this->httpClient;
