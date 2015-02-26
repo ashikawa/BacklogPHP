@@ -1,0 +1,21 @@
+{
+    "name": "PHP OAuth2 Client for Heroku",
+    "description": "",
+    "keywords": [],
+    "success_url": "/",
+    "scripts": {
+       "postdeploy": []
+    },
+    "env": {
+        "BACKLOG_BASE_URI": "",
+        "BACKLOG_CLIENT_ID": {
+            "required": false
+        },
+        "BACKLOG_CLIENT_SECRET": {
+            "required": false
+        }
+    },
+    "addons": [
+        "memcachier"
+    ]
+}
