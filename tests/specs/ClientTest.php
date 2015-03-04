@@ -1,35 +1,33 @@
 <?php
+namespace BacklogTest;
+
+use PHPUnit_Framework_TestCase as TestCase;
+use Backlog\Client as Client;
+
 /**
  * @SuppressWarnings("TooManyMethods")
  */
-class ClientTest extends PHPUnit_Framework_TestCase
+class ClientTest extends TestCase
 {
-    protected $adapter = null;
+    use mockResponse;
 
     protected $client = null;
 
     public function setUp()
     {
-        $adapter = new Zend\Http\Client\Adapter\Test();
-        $this->adapter = $adapter;
+        $adapter = $this->setupAdapter();
 
-        $client = new \Backlog\Client(array(
+        $client = new Client(array(
             'adapter' => $adapter,
         ));
+
+        $client->setBaseUri('http://dummyspace.example.com/');
 
         $this->client = $client;
     }
 
     public function tearDown()
     {
-    }
-
-    protected function setMockResponse($file = '200ok')
-    {
-        $adapter  = $this->adapter;
-        $response = file_get_contents(__DIR__.'/httpresponse/'.$file.'.txt');
-
-        $adapter->setResponse($response);
     }
 
     public function testBasicFunctions()
@@ -46,8 +44,6 @@ class ClientTest extends PHPUnit_Framework_TestCase
 
         $client = $this->client;
 
-        $client->setBaseUri('http://dummyspace.example.com/');
-
         $client->projects()->get();
 
         $uri = $client->getHttpClient()->getUri();
@@ -62,12 +58,9 @@ class ClientTest extends PHPUnit_Framework_TestCase
         $this->setMockResponse();
 
         $client = $this->client;
-
-        $client->setBaseUri('http://dummyspace.example.com/')
-            ->setApiKey('dummytoken');
+        $client->setApiKey('dummytoken');
 
         $client->projects()->get();
-
         $request = $client->getHttpClient()->getRequest();
 
         $this->assertEquals('dummytoken', $request->getQuery('apiKey'));
@@ -79,8 +72,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
 
         $client = $this->client;
 
-        $client->setBaseUri('http://dummyspace.example.com/')
-            ->setAccessToken('dummytoken');
+        $client->setAccessToken('dummytoken');
 
         $client->projects()->get();
 
@@ -98,20 +90,22 @@ class ClientTest extends PHPUnit_Framework_TestCase
         $client = $this->client;
 
         $client->projects->get();
-        $path = $client->getHttpClient()->getUri()->getPath();
-        $this->assertEquals('/api/v2/projects', $path);
+        $this->assertRequestPath('/api/v2/projects');
 
         $client->space->notification->get();
-        $path = $client->getHttpClient()->getUri()->getPath();
-        $this->assertEquals('/api/v2/space/notification', $path);
+        $this->assertRequestPath('/api/v2/space/notification');
 
         $client->issues('TEST-1')->comments->get();
-        $path = $client->getHttpClient()->getUri()->getPath();
-        $this->assertEquals('/api/v2/issues/TEST-1/comments', $path);
+        $this->assertRequestPath('/api/v2/issues/TEST-1/comments');
 
         $client->issues->{'TEST-2'}->comments->get();
-        $path = $client->getHttpClient()->getUri()->getPath();
-        $this->assertEquals('/api/v2/issues/TEST-2/comments', $path);
+        $this->assertRequestPath('/api/v2/issues/TEST-2/comments');
+    }
+
+    private function assertRequestPath($expected)
+    {
+        $path = $this->client->getHttpClient()->getUri()->getPath();
+        $this->assertEquals($expected, $path);
     }
 
     public function testMethods()
@@ -119,7 +113,6 @@ class ClientTest extends PHPUnit_Framework_TestCase
         $this->setMockResponse();
 
         $client = $this->client;
-        $client->setBaseUri('http://www.example.com/');
 
         $client->projects->request('GET');
         $method = $client->getHttpClient()->getMethod();

@@ -33,13 +33,18 @@ class Consumer
      */
     public function __construct($config = array())
     {
-        $client = new \Backlog\Client();
+        if (isset($config['client'])) {
+            $client = $config['client'];
+            unset($config['client']);
+        } else {
+            $client = new \Backlog\Client();
+        }
 
         foreach ($config as $key => $value) {
             switch ($key) {
                 case 'clientId':
                 case 'clientSecret':
-                case 'rediectUri':
+                case 'redirectUri':
                     $this->{$key} = $value;
                     break;
                 case 'baseUri':

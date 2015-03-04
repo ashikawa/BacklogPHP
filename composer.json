@@ -26,6 +26,11 @@
             "Backlog\\": "library/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "BacklogTest\\": "tests/specs/"
+        }
+    },
     "scripts": {
         "phpunit": "phpunit -c tests/phpunit.xml",
         "php-cs-fixer": "php-cs-fixer fix .",
