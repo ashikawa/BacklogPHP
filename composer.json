@@ -32,10 +32,10 @@
         }
     },
     "scripts": {
-        "phpunit": "phpunit -c tests/phpunit.xml",
-        "php-cs-fixer": "php-cs-fixer fix .",
-        "php-cs-fixer-dr": "php-cs-fixer fix . --dry-run",
-        "phpmd": "phpmd library,tests,public text codesize,controversial,design,naming,unusedcode",
+        "phpunit": "./vendor/bin/phpunit -c tests/phpunit.xml",
+        "php-cs-fixer": "./vendor/bin/php-cs-fixer fix .",
+        "php-cs-fixer-dr": "./vendor/bin/php-cs-fixer fix . --dry-run",
+        "phpmd": "./vendor/bin/phpmd library,tests,public text codesize,controversial,design,naming,unusedcode",
         "test": [
             "composer php-cs-fixer-dr",
             "composer phpmd",
