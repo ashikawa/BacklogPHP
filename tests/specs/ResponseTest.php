@@ -6,7 +6,7 @@ use Backlog\Response as Response;
 
 class ResponseTest extends TestCase
 {
-    use mockResponse;
+    use mockRequest;
 
     public function setUp()
     {

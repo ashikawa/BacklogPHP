@@ -2,28 +2,17 @@
 namespace BacklogTest;
 
 use PHPUnit_Framework_TestCase as TestCase;
-use Backlog\Client as Client;
 
 /**
  * @SuppressWarnings("TooManyMethods")
  */
 class ClientTest extends TestCase
 {
-    use mockResponse;
-
-    protected $client = null;
+    use mockRequest;
 
     public function setUp()
     {
-        $adapter = $this->setupAdapter();
-
-        $client = new Client(array(
-            'adapter' => $adapter,
-        ));
-
-        $client->setBaseUri('http://dummyspace.example.com/');
-
-        $this->client = $client;
+        $this->setupClient();
     }
 
     public function tearDown()
@@ -100,12 +89,6 @@ class ClientTest extends TestCase
 
         $client->issues->{'TEST-2'}->comments->get();
         $this->assertRequestPath('/api/v2/issues/TEST-2/comments');
-    }
-
-    private function assertRequestPath($expected)
-    {
-        $path = $this->client->getHttpClient()->getUri()->getPath();
-        $this->assertEquals($expected, $path);
     }
 
     public function testMethods()

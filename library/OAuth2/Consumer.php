@@ -70,6 +70,9 @@ class Consumer
         return $this->client;
     }
 
+    /**
+     * @return AccessToken
+     */
     public function requestAccessToken()
     {
         $this->removeAccessToken();
@@ -87,6 +90,8 @@ class Consumer
         }
 
         $this->tokenRequest($params);
+
+        return $this->getAccessToken();
     }
 
     private function checkState()
@@ -101,6 +106,9 @@ class Consumer
         }
     }
 
+    /**
+     * @return AccessToken
+     */
     public function requestRefreshToken()
     {
         $accessToken = $this->getAccessToken();
@@ -119,6 +127,8 @@ class Consumer
         $this->client->setAccessToken(null);
 
         $this->tokenRequest($params);
+
+        return $this->getAccessToken();
     }
 
     /**
@@ -156,7 +166,7 @@ class Consumer
     }
 
     /**
-     * @return string
+     * @return AccessToken
      */
     public function getAccessToken()
     {
