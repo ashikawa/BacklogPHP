@@ -7,7 +7,9 @@
        "postdeploy": []
     },
     "env": {
-        "BACKLOG_BASE_URI": "",
+        "BACKLOG_BASE_URI": {
+            "required": false
+        },
         "BACKLOG_CLIENT_ID": {
             "required": false
         },
