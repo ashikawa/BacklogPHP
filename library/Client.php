@@ -152,7 +152,7 @@ class Client
      * @param string $name
      * @param array  $arguments
      *
-     * @return HttpClient|Client
+     * @return HttpClient|Response
      */
     public function __call($name, $arguments)
     {

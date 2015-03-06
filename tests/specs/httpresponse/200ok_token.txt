@@ -1,0 +1,10 @@
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+Connection: close
+
+{
+    "access_token": "xxxxxxxxxx",
+    "token_type":"Bearer",
+    "expires_in":3600,
+    "refresh_token":"yyyyyyyyyy"
+}

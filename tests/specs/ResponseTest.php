@@ -1,6 +1,13 @@
 <?php
-class ResponseTest extends PHPUnit_Framework_TestCase
+namespace BacklogTest;
+
+use PHPUnit_Framework_TestCase as TestCase;
+use Backlog\Response as Response;
+
+class ResponseTest extends TestCase
 {
+    use mockRequest;
+
     public function setUp()
     {
     }
@@ -9,21 +16,13 @@ class ResponseTest extends PHPUnit_Framework_TestCase
     {
     }
 
-    protected function buildHttpResponse($file = '200ok')
-    {
-        $responseString = file_get_contents(__DIR__.'/httpresponse/'.$file.'.txt');
-
-        return Zend\Http\Response::fromString($responseString);
-    }
-
     public function testResponseMethods()
     {
-        $httpresponse = $this->buildHttpResponse();
-        $response = new Backlog\Response($httpresponse);
+        $httpresponse = $this->buildMockResponse();
+        $response = new Response($httpresponse);
 
         $this->assertTrue(isset($response->content));
         $this->assertEquals('dummy', $response->content);
-
         $this->assertEquals('dummy', $response->getBody()->content);
         $this->assertInternalType('string', $response->getRawBody());
     }
@@ -33,8 +32,8 @@ class ResponseTest extends PHPUnit_Framework_TestCase
      */
     public function testErrorJsonParseError()
     {
-        $httpresponse = $this->buildHttpResponse('200ok_wrongformat');
+        $httpresponse = $this->buildMockResponse('200ok_wrongformat');
 
-        new Backlog\Response($httpresponse);
+        new Response($httpresponse);
     }
 }

@@ -33,13 +33,18 @@ class Consumer
      */
     public function __construct($config = array())
     {
-        $client = new \Backlog\Client();
+        if (isset($config['client'])) {
+            $client = $config['client'];
+            unset($config['client']);
+        } else {
+            $client = new \Backlog\Client();
+        }
 
         foreach ($config as $key => $value) {
             switch ($key) {
                 case 'clientId':
                 case 'clientSecret':
-                case 'rediectUri':
+                case 'redirectUri':
                     $this->{$key} = $value;
                     break;
                 case 'baseUri':
@@ -65,6 +70,9 @@ class Consumer
         return $this->client;
     }
 
+    /**
+     * @return AccessToken
+     */
     public function requestAccessToken()
     {
         $this->removeAccessToken();
@@ -82,6 +90,8 @@ class Consumer
         }
 
         $this->tokenRequest($params);
+
+        return $this->getAccessToken();
     }
 
     private function checkState()
@@ -96,6 +106,9 @@ class Consumer
         }
     }
 
+    /**
+     * @return AccessToken
+     */
     public function requestRefreshToken()
     {
         $accessToken = $this->getAccessToken();
@@ -114,6 +127,8 @@ class Consumer
         $this->client->setAccessToken(null);
 
         $this->tokenRequest($params);
+
+        return $this->getAccessToken();
     }
 
     /**
@@ -151,7 +166,7 @@ class Consumer
     }
 
     /**
-     * @return string
+     * @return AccessToken
      */
     public function getAccessToken()
     {
