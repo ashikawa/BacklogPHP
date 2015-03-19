@@ -26,7 +26,7 @@ $response = $backlog->projects->get();
 var_dump($response->getBody());
 ```
 
-[more sample](https://github.com/m-s-modified/BacklogPHP/blob/master/sample.php)
+[more sample](https://github.com/ashikawa/BacklogPHP/blob/master/sample.php)
 
 ## OAuth2
 
