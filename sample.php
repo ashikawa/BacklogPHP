@@ -3,25 +3,25 @@ require_once 'vendor/autoload.php';
 
 use Backlog\Client;
 
-if (isset($_ENV['BACKLOG_SPACE'])) {
-    $space = $_ENV['BACKLOG_SPACE'];
+if (isset($_ENV['BACKLOG_BASE_URI'])) {
+    $baseUri = $_ENV['BACKLOG_BASE_URI'];
 }
 if (isset($_ENV['BACKLOG_API_KEY'])) {
     $token = $_ENV['BACKLOG_API_KEY'];
 }
 
-// php sample.php -s BACKLOG_SPACE -k BACKLOG_API_KEY
-$options = getopt('s:t:');
+// php sample.php -u https://exmple.backlog.jp/ -k XXXXXXX
+$options = getopt('u:t:');
 
-if (isset($options['s'])) {
-    $space = $options['s'];
+if (isset($options['u'])) {
+    $baseUri = $options['u'];
 }
 if (isset($options['k'])) {
     $token = $options['k'];
 }
 
 $backlog = new Client();
-$backlog->setSpace($space)
+$backlog->setBaseUri($baseUri)
     ->setToken($token);
 
 // # GET
