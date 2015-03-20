@@ -51,8 +51,8 @@ php composer.phar test
 
 # CI Build Status
 
-[![Build Status](https://travis-ci.org/m-s-modified/BacklogPHP.svg?branch=master)](https://travis-ci.org/m-s-modified/BacklogPHP)
+[![Build Status](https://travis-ci.org/ashikawa/BacklogPHP.svg?branch=master)](https://travis-ci.org/ashikawa/BacklogPHP)
 
 # Deploy
 
-[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/m-s-modified/BacklogPHP/tree/heroku)
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/ashikawa/BacklogPHP/tree/heroku)
