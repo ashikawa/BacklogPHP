@@ -5,11 +5,15 @@ use ReflectionClass;
 use Zend\Http\Client as HttpClient;
 use Zend\Http\Request;
 use Zend\Http\Response as HttpResponse;
+use Backlog\Client\UrlBuilder as UrlBuilder;
 use Backlog\Exception\ApiErrorException;
 use Backlog\Exception\HttpErrorException;
 
 /**
  * Backlog Api V2 REST Client.
+ *
+ * @method string getBaseUri()
+ * @method Client setBaseUri(string $uri)
  */
 class Client
 {
@@ -17,11 +21,6 @@ class Client
      * @var array
      */
     protected $config  = null;
-
-    /**
-     * @var string
-     */
-    protected $baseUri = null;
 
     /**
      * @var string
@@ -34,9 +33,9 @@ class Client
     protected $accessToken = null;
 
     /**
-     * @var array
+     * @var UrlBuilder
      */
-    protected $methodStack = array();
+    protected $urlBuilder = null;
 
     /**
      * @var array
@@ -58,6 +57,7 @@ class Client
         }
 
         $this->setupCallMethod();
+        $this->urlBuilder = new UrlBuilder();
     }
 
     /**
@@ -75,26 +75,6 @@ class Client
                 $this->httpMethods[] = $value;
             }
         }
-    }
-
-    /**
-     * @param string $url
-     *
-     * @return Client
-     */
-    public function setBaseUri($uri)
-    {
-        $this->baseUri = $uri;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getBaseUrl()
-    {
-        return $this->baseUri;
     }
 
     /**
@@ -143,7 +123,7 @@ class Client
      */
     public function __get($name)
     {
-        $this->methodStack[] = $name;
+        $this->urlBuilder->{$name};
 
         return $this;
     }
@@ -162,11 +142,12 @@ class Client
             return call_user_func_array(array($this, 'request'), $arguments);
         }
 
-        $this->methodStack = array_merge(
-            $this->methodStack,
-            array($name),
-            $arguments
-        );
+        $return = call_user_func_array(array($this->urlBuilder, $name), $arguments);
+
+        // delegation mtdhos
+        if (in_array($name, array('getBaseUrl'))) {
+            return $return;
+        }
 
         return $this;
     }
@@ -181,7 +162,7 @@ class Client
     {
         $httpClient = $this->getHttpClient();
 
-        $endpoint = $this->buildEndPointUri();
+        $endpoint = $this->urlBuilder->build();
 
         $httpClient->setUri($endpoint)
             ->setMethod($method);
@@ -212,21 +193,6 @@ class Client
         }
 
         $this->throwApiException($response);
-    }
-
-    /**
-     * @return string
-     */
-    protected function buildEndPointUri()
-    {
-        $methodStack = $this->methodStack;
-        $path        = implode('/', $methodStack);
-
-        $endpoint = trim($this->getBaseUrl(), '/').'/api/v2/'.$path;
-
-        $this->methodStack = array();
-
-        return $endpoint;
     }
 
     /**
